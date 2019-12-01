@@ -1,0 +1,2 @@
+//Pour ajouter une table dans la bdd
+> php bin/console make:entity
