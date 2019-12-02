@@ -41,8 +41,8 @@ class MusiqueController extends AbstractController
                 'album' => $musique->getAlbum(),
                 'annee' => $musique->getAnnee(),
                 'genre' => $musique->getGenre(),
-                'pathimage' => $musique->getPathimage(),
-                'pathmusique' => $musique->getPathmusique()
+                'poster' => $musique->getPathimage(),
+                'src' => $musique->getPathmusique()
             ); 
         }
 
@@ -68,8 +68,8 @@ class MusiqueController extends AbstractController
                 'album' => $musique->getAlbum(),
                 'annee' => $musique->getAnnee(),
                 'genre' => $musique->getGenre(),
-                'pathimage' => $musique->getPathimage(),
-                'pathmusique' => $musique->getPathmusique()
+                'poster' => $musique->getPathimage(),
+                'src' => $musique->getPathmusique()
             );
         }        
 
