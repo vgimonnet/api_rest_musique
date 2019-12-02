@@ -135,7 +135,7 @@ class MusiqueController extends AbstractController
     }
 
         /**
-     * @Route("/musiques/ajouter/{id}/{titre}/{artiste}/{album}/{annee}/{genre}/{pathimage}/{pathmusique}", name="musique_ajout", methods={"POST"})
+     * @Route("/musiques/modifer/{id}/{titre}/{artiste}/{album}/{annee}/{genre}/{pathimage}/{pathmusique}", name="musique_modify", methods={"UPDATE"})
      */
     public function modifierMusique($id, $titre, $artiste, $album, $annee, $genre, $pathimage, $pathmusique){
         $em = $this->getDoctrine()->getManager();
