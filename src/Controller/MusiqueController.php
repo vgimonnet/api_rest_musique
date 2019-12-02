@@ -47,7 +47,7 @@ class MusiqueController extends AbstractController
         }
 
         $reponse = new Response();
-        $reponse->setContent(json_encode(array("musiques"=>$listMusiques)));
+        $reponse->setContent(json_encode($listMusiques));
         $reponse->headers->set("Content-Type", "application/json");
         $reponse->headers->set("Access-Control-Allow-Origin", "*");
         return $reponse;
@@ -74,7 +74,7 @@ class MusiqueController extends AbstractController
         }        
 
         $reponse = new Response();
-        $reponse->setContent(json_encode(array("musique"=>$detailMusique)));
+        $reponse->setContent(json_encode($detailMusique));
         $reponse->headers->set("Content-Type", "application/json");
         $reponse->headers->set("Access-Control-Allow-Origin", "*");
         return $reponse;
@@ -105,7 +105,7 @@ class MusiqueController extends AbstractController
                 )
             ));
         }else{
-            $reponse = new Response(json_encode(array('erreur' => 'musique non valide')));
+            $reponse = new Response(json_encode('musique non valide'));
         }
         
 
@@ -165,5 +165,3 @@ class MusiqueController extends AbstractController
         return $reponse;
     }
 }
-
-
