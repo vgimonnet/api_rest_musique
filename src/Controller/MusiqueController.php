@@ -82,9 +82,9 @@ class MusiqueController extends AbstractController
     }
 
     /**
-     * @Route("/musiques/ajouter/{titre}/{artiste}/{album}/{annee}/{genre}/{pathimage}/{pathmusique}", name="musique_ajout", methods={"POST"})
+     * @Route("/musiques/ajouter", name="musique_ajout", methods={"POST"})
      */
-    public function ajouterMusique($titre, $artiste, $album = null, $annee = null, $genre = null, $pathimage = null, $pathmusique){
+    public function ajouterMusique(){
 
         if($_POST['titre'] != null and $_POST['titre'] != null and $_FILES['musique']['name'] != null){
             $em = $this->getDoctrine()->getManager();
@@ -112,13 +112,18 @@ class MusiqueController extends AbstractController
             
             if($_FILES['image']['name'] != null){
                 $musique->setPathimage($_FILES['image']['name']);
-
+                if(isset($_FILES['image']['type'])){
+                    move_uploaded_file($_FILES['image']['tmp_name'], '../public/Images/'.$_FILES['image']['name']);
+                }
             }else{
                 $musique->setPathimage(null);
             }
 
             
             $musique->setPathmusique($_FILES['musique']['name']);
+            if(isset($_FILES['musique']['type'])){
+                move_uploaded_file($_FILES['musique']['tmp_name'], '../public/Musiques/'.$_FILES['musique']['name']);
+            }
 
 
     
@@ -132,10 +137,9 @@ class MusiqueController extends AbstractController
                 )
             ));
         }else{
-            $reponse = new Response(json_encode('musique non valide'));
+            $reponse = new Response(json_encode('state: musique non valide'));
         }
         
-
         $reponse->headers->set("Content-Type", "application/json");
         $reponse->headers->set("Access-Control-Allow-Origin", "*");
         return $reponse;
@@ -200,10 +204,7 @@ class MusiqueController extends AbstractController
         $repository = $this->getDoctrine()->getRepository(Musique::class);
         $musique = $repository->find($id);
 
-
-
-        $file = "../public/Musiques/".$musique->getPathmusique();
-        
+        $file = "../public/Musiques/".$musique->getPathmusique();        
 
         return new \Symfony\Component\HttpFoundation\BinaryFileResponse($file);
     }
@@ -220,9 +221,4 @@ class MusiqueController extends AbstractController
         
         return new \Symfony\Component\HttpFoundation\BinaryFileResponse($file);
     }
-
-    /**
-     * 
-     */
-
 }
