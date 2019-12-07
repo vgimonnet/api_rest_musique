@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Musique;
 
 
+
 /**
  * @Route("/api_musique", name="api_musique")
  */
@@ -134,7 +135,7 @@ class MusiqueController extends AbstractController
         return $reponse;
     }
 
-        /**
+    /**
      * @Route("/musiques/modifer/{id}/{titre}/{artiste}/{album}/{annee}/{genre}/{pathimage}/{pathmusique}", name="musique_modify", methods={"UPDATE"})
      */
     public function modifierMusique($id, $titre, $artiste, $album, $annee, $genre, $pathimage, $pathmusique){
@@ -164,4 +165,31 @@ class MusiqueController extends AbstractController
         $reponse->headers->set("Access-Control-Allow-Origin", "*");
         return $reponse;
     }
+
+    /**
+     * @Route("/musiques/get/musique/{id}", name="get_musique", methods={"GET"})
+     */
+    public function getMusiqueFile($id){
+
+        $repository = $this->getDoctrine()->getRepository(Musique::class);
+        $musique = $repository->find($id);
+
+        $file = "../public/Musiques/".$musique->getPathmusique();
+        
+        return new \Symfony\Component\HttpFoundation\BinaryFileResponse($file);
+    }
+
+    /**
+     * @Route("/musiques/get/image/{id}", name="get_musique", methods={"GET"})
+     */
+    public function getImageFile($id){
+
+        $repository = $this->getDoctrine()->getRepository(Musique::class);
+        $musique = $repository->find($id);
+
+        $file = "../public/Images/".$musique->getPathmusique();
+        
+        return new \Symfony\Component\HttpFoundation\BinaryFileResponse($file);
+    }
+
 }
