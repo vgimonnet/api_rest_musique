@@ -37,13 +37,13 @@ class MusiqueController extends AbstractController
         foreach($musiques as $musique){
             $listMusiques[] = array(
                 'id' => $musique->getId(),
-                'titre' => $musique->getTitre(),
-                'artiste' => $musique->getArtiste(),
+                'title' => $musique->getTitre(),
+                'artist' => $musique->getArtiste(),
                 'album' => $musique->getAlbum(),
                 'annee' => $musique->getAnnee(),
                 'genre' => $musique->getGenre(),
-                'poster' => $musique->getPathimage(),
-                'src' => $musique->getPathmusique()
+                'pic' => "http://localhost:8000/api_musique/musiques/get/image/".$musique->getId(),
+                'src' => "http://localhost:8000/api_musique/musiques/get/musique/".$musique->getId()
             ); 
         }
 
@@ -64,12 +64,12 @@ class MusiqueController extends AbstractController
         if( !empty($musique)){
             $detailMusique = array(
                 'id' => $musique->getId(),
-                'titre' => $musique->getTitre(),
-                'artiste' => $musique->getArtiste(),
+                'title' => $musique->getTitre(),
+                'artist' => $musique->getArtiste(),
                 'album' => $musique->getAlbum(),
                 'annee' => $musique->getAnnee(),
                 'genre' => $musique->getGenre(),
-                'poster' => $musique->getPathimage(),
+                'pic' => $musique->getPathimage(),
                 'src' => $musique->getPathmusique()
             );
         }        
@@ -98,13 +98,13 @@ class MusiqueController extends AbstractController
                 $musique->setAlbum(null);
             }
 
-            if($_POST['album'] != null){
+            if($_POST['annee'] != null){
                 $musique->setAnnee($_POST['annee']);
             }else{
                 $musique->setAnnee(null);
             }
             
-            if($_POST['album'] != null){
+            if($_POST['genre'] != null){
                 $musique->setGenre($_POST['genre']);
             }else{
                 $musique->setGenre(null);
@@ -132,8 +132,8 @@ class MusiqueController extends AbstractController
     
             $reponse = new Response(json_encode(array(
                 'id'     => $musique->getId(),
-                'artiste'    => $musique->getArtiste(),
-                'titre' => $musique->getTitre()
+                'artist'    => $musique->getArtiste(),
+                'title' => $musique->getTitre()
                 )
             ));
         }else{
@@ -156,8 +156,8 @@ class MusiqueController extends AbstractController
         $em->flush();
 
         $reponse = new Response(json_encode(array(
-            'artiste'    => $musique->getArtiste(),
-            'titre' => $musique->getTitre(),
+            'artist'    => $musique->getArtiste(),
+            'title' => $musique->getTitre(),
             ))
         );
         $reponse->headers->set("Content-Type", "application/json");
@@ -186,8 +186,8 @@ class MusiqueController extends AbstractController
 
         $reponse = new Response(json_encode(array(
             'id'     => $musique->getId(),
-            'artiste'    => $musique->getArtiste(),
-            'titre' => $musique->getTitre()
+            'artist'    => $musique->getArtiste(),
+            'title' => $musique->getTitre()
             )
         ));
 
