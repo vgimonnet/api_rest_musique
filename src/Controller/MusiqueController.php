@@ -83,90 +83,71 @@ class MusiqueController extends AbstractController
 
     /**
      * @Route("/musiques/ajouter/{titre}/{artiste}/{album}/{annee}/{genre}", name="musique_ajout", methods={"POST"})
-     * @param Request $request
      */
     public function ajouterMusique($titre, $artiste, $album, $annee, $genre, Request $request){
-
-        header("Access-Control-Allow-Origin: *");
+        
         $em = $this->getDoctrine()->getManager();
+        $repository = $this->getDoctrine()->getRepository(Musique::class);
         $musique = new Musique();
-        if($titre != null){
 
-            if($request->files->get('mp3') != null){
-                $get_mp3 = $request->files->get('mp3');
-                $temp_mp3 = pathinfo($get_mp3->getClientOriginalName(), PATHINFO_FILENAME);
-                $mp3_name = $temp_mp3.'.'.$get_mp3->getClientOriginalExtension();
-                
-                $get_mp3->move(
-                    "../public/Musiques/",
-                    $mp3_name
-                );
-                $musique->setPathmusique($mp3_name);
-            }else{
-                $musique->setPathmusique('null');
-            }
+        $get_mp3 = $request->files->get('mp3');
+        $get_pic = $request->files->get('pic');
 
-            if($request->files->get('pic')){
-                $get_pic = $request->files->get('pic');
-                $temp_pic = pathinfo($get_pic->getClientOriginalName(), PATHINFO_FILENAME);
-                $pic_name = $temp_pic.'.'.$get_pic->getClientOriginalExtension() ;
-                $get_pic->move(
-                    "../public/Images/",
-                    $pic_name
-                );
-                $musique->setPathimage($pic_name);
-            }else{
-                $musique->setPathimage('null');
-            }
-            
-            $musique = new Musique();
-            $musique->setTitre($titre);
-
-            if($artiste != null){
-                $musique->setArtiste($artiste);
-            }else{
-                $musique->setArtiste(null);
-            }
-
-            if($album != null){
-                $musique->setAlbum($album);
-            }else{
-                $musique->setAlbum(null);
-            }
-
-            if($annee != null){
-                $musique->setAnnee($annee);
-            }else{
-                $musique->setAnnee(null);
-            }
-            
-            if($genre != null){
-                $musique->setGenre($genre);
-            }else{
-                $musique->setGenre(null);
-            }
-            $em->persist($musique);
-            $em->flush();
-    
-            $reponse = new Response(json_encode(array(
-                'id'     => $musique->getId(),
-                'artist'    => $musique->getArtiste(),
-                'title' => $musique->getTitre()
-                )
-            ));
+        $mp3_name = $titre.'.'.$get_mp3->guessExtension();
+        $pic_name = $titre.'.'.$get_pic->guessExtension();
+        
+        $musique->setPathmusique($mp3_name);
+        $musique->setPathimage($pic_name);
+        $get_mp3->move(
+            "../public/Musiques/",
+            $mp3_name
+        );
+        $get_pic->move(
+            "../public/Images/",
+            $pic_name
+        );
+        $musique->setTitre($titre);
+        if($artiste != null){
+            $musique->setArtiste($artiste);
         }else{
-            $reponse = new Response(json_encode('state: musique non valide'));
+            $musique->setArtiste(null);
+        }
+        if($album != null){
+            $musique->setAlbum($album);
+        }else{
+            $musique->setAlbum(null);
+        }
+        if($annee != null){
+            $musique->setAnnee($annee);
+        }else{
+            $musique->setAnnee(null);
         }
         
+        if($genre != null){
+            $musique->setGenre($genre);
+        }else{
+            $musique->setGenre(null);
+        }
+        $em->persist($musique);
+        $em->flush();
+
+        $reponse = new Response(json_encode(array(
+            'id'     => $musique->getId(),
+            'artist'    => $musique->getArtiste(),
+            'title' => $musique->getTitre()
+            )
+        ));
         $reponse->headers->set("Content-Type", "application/json");
         $reponse->headers->set("Access-Control-Allow-Origin", "*");
         return $reponse;
+        
     }
 
     /**
      * @Route("/musiques/delete/{id}", name="musique_delete", methods={"DELETE"})
      */
     public function deleteMusique($id){
+
         $em = $this->getDoctrine()->getManager();
         $repository = $this->getDoctrine()->getRepository(Musique::class);
         $musique = $repository->find($id);
@@ -175,7 +156,7 @@ class MusiqueController extends AbstractController
 
         $reponse = new Response(json_encode(array(
             'artist'    => $musique->getArtiste(),
-            'title' => $musique->getTitre(),
+            'title' => $musique->getTitre()
             ))
         );
         $reponse->headers->set("Content-Type", "application/json");
@@ -184,9 +165,10 @@ class MusiqueController extends AbstractController
     }
 
     /**
-     * @Route("/musiques/modifer/{id}/{titre}/{artiste}/{album}/{annee}/{genre}", name="musique_modify", methods={"UPDATE"})
+     * @Route("/musiques/modifer/{id}/{titre}/{artiste}/{album}/{annee}/{genre}", name="musique_modify", methods={"PUT"})
      */
     public function modifierMusique($id, $titre, $artiste, $album, $annee, $genre){
+
         $em = $this->getDoctrine()->getManager();
         $repository = $this->getDoctrine()->getRepository(Musique::class);
         $musique = $repository->find($id);

@@ -66,9 +66,9 @@ CREATE TABLE IF NOT EXISTS `musique` (
 --
 
 INSERT INTO `musique` (`id`, `titre`, `artiste`, `album`, `annee`, `genre`, `pathimage`, `pathmusique`) VALUES
-(1, 'Back in Black', 'AC-DC', 'Back in Black', 1980, 'Hard Rock', 'App/public/Images/Acdc_-_Back_In_Black-front', 'App/public/Musiques/AC-DC - Back in Black.mp3'),
-(2, 'Chop Suey!', 'System Of A Down', 'Chop Suey!', 2001, 'Metal', 'public/Images/chop_suey_album_front.jpg', 'public/Musiques/soad_chop_suey.mp3'),
-(3, 'Lose Yourself', 'Eminem', '8Mile', 2002, 'Rap', 'public/Images/lose_yourself.jpg', 'public/Musiques/Eminem-Berzerk.mp3');
+(1, 'Back in Black', 'AC-DC', 'Back in Black', 1980, 'Hard Rock', 'Acdc_-_Back_In_Black-front.jpg', 'AC-DC - Back in Black.mp3'),
+(2, 'Chop Suey!', 'System Of A Down', 'Chop Suey!', 2001, 'Metal', 'chop_suey_album_front.jpg', 'soad_chop_suey.mp3'),
+(3, 'Lose Yourself', 'Eminem', '8Mile', 2002, 'Rap', 'lose_yourself.jpg', 'Eminem-Berzerk.mp3');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
