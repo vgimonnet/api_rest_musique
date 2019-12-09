@@ -82,51 +82,69 @@ class MusiqueController extends AbstractController
     }
 
     /**
-     * @Route("/musiques/ajouter", name="musique_ajout", methods={"POST"})
+     * @Route("/musiques/ajouter/{titre}/{artiste}/{album}/{annee}/{genre}", name="musique_ajout", methods={"POST"})
+     * @param Request $request
      */
-    public function ajouterMusique(){
+    public function ajouterMusique($titre, $artiste, $album, $annee, $genre, Request $request){
 
-        if($_POST['titre'] != null and $_POST['titre'] != null and $_FILES['musique']['name'] != null){
-            $em = $this->getDoctrine()->getManager();
+        header("Access-Control-Allow-Origin: *");
+        $em = $this->getDoctrine()->getManager();
+        $musique = new Musique();
+        if($titre != null){
+
+            if($request->files->get('mp3') != null){
+                $get_mp3 = $request->files->get('mp3');
+                $temp_mp3 = pathinfo($get_mp3->getClientOriginalName(), PATHINFO_FILENAME);
+                $mp3_name = $temp_mp3.'.'.$get_mp3->getClientOriginalExtension();
+                
+                $get_mp3->move(
+                    "../public/Musiques/",
+                    $mp3_name
+                );
+                $musique->setPathmusique($mp3_name);
+            }else{
+                $musique->setPathmusique('null');
+            }
+
+            if($request->files->get('pic')){
+                $get_pic = $request->files->get('pic');
+                $temp_pic = pathinfo($get_pic->getClientOriginalName(), PATHINFO_FILENAME);
+                $pic_name = $temp_pic.'.'.$get_pic->getClientOriginalExtension() ;
+                $get_pic->move(
+                    "../public/Images/",
+                    $pic_name
+                );
+                $musique->setPathimage($pic_name);
+            }else{
+                $musique->setPathimage('null');
+            }
+            
             $musique = new Musique();
-            $musique->setTitre($_POST['titre']);
-            $musique->setArtiste($_POST['artiste']);
+            $musique->setTitre($titre);
 
-            if($_POST['album'] != null){
-                $musique->setAlbum($_POST['album']);
+            if($artiste != null){
+                $musique->setArtiste($artiste);
+            }else{
+                $musique->setArtiste(null);
+            }
+
+            if($album != null){
+                $musique->setAlbum($album);
             }else{
                 $musique->setAlbum(null);
             }
 
-            if($_POST['annee'] != null){
-                $musique->setAnnee($_POST['annee']);
+            if($annee != null){
+                $musique->setAnnee($annee);
             }else{
                 $musique->setAnnee(null);
             }
             
-            if($_POST['genre'] != null){
-                $musique->setGenre($_POST['genre']);
+            if($genre != null){
+                $musique->setGenre($genre);
             }else{
                 $musique->setGenre(null);
             }
-            
-            if($_FILES['image']['name'] != null){
-                $musique->setPathimage($_FILES['image']['name']);
-                if(isset($_FILES['image']['type'])){
-                    move_uploaded_file($_FILES['image']['tmp_name'], '../public/Images/'.$_FILES['image']['name']);
-                }
-            }else{
-                $musique->setPathimage(null);
-            }
-
-            
-            $musique->setPathmusique($_FILES['musique']['name']);
-            if(isset($_FILES['musique']['type'])){
-                move_uploaded_file($_FILES['musique']['tmp_name'], '../public/Musiques/'.$_FILES['musique']['name']);
-            }
-
-
-    
             $em->persist($musique);
             $em->flush();
     
@@ -166,9 +184,9 @@ class MusiqueController extends AbstractController
     }
 
     /**
-     * @Route("/musiques/modifer/{id}/{titre}/{artiste}/{album}/{annee}/{genre}/{pathimage}/{pathmusique}", name="musique_modify", methods={"UPDATE"})
+     * @Route("/musiques/modifer/{id}/{titre}/{artiste}/{album}/{annee}/{genre}", name="musique_modify", methods={"UPDATE"})
      */
-    public function modifierMusique($id, $titre, $artiste, $album, $annee, $genre, $pathimage, $pathmusique){
+    public function modifierMusique($id, $titre, $artiste, $album, $annee, $genre){
         $em = $this->getDoctrine()->getManager();
         $repository = $this->getDoctrine()->getRepository(Musique::class);
         $musique = $repository->find($id);
@@ -178,8 +196,6 @@ class MusiqueController extends AbstractController
         $musique->setAlbum($album);
         $musique->setAnnee($annee);
         $musique->setGenre($genre);
-        $musique->setPathimage($pathimage);
-        $musique->setPathmusique($pathmusique);
 
         $em->persist($musique);
         $em->flush();
