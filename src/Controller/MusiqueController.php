@@ -90,22 +90,30 @@ class MusiqueController extends AbstractController
         $repository = $this->getDoctrine()->getRepository(Musique::class);
         $musique = new Musique();
 
-        $get_mp3 = $request->files->get('mp3');
-        $get_pic = $request->files->get('pic');
-
-        $mp3_name = $titre.'.'.$get_mp3->guessExtension();
-        $pic_name = $titre.'.'.$get_pic->guessExtension();
-        
-        $musique->setPathmusique($mp3_name);
+        if($request->files->get('pic') != null){
+            $pic = $request->files->get('pic');
+            $pic_name = $titre.'.'.$pic->guessExtension();
+            $pic->move(
+                "../public/Images/",
+                $pic_name
+            );
+        }else{
+            $pic_name = 'fail/jpg';
+        }
+        /* 
+        if($request->files->get('song') != null) {
+            $song = $request->files->get('song');
+            $song_name = $titre.'.'.$song->guessExtension();
+            $song->move(
+                "../public/Musiques/",
+                $song_name
+            );
+        }else{
+            $song_name = 'failed.mp3';
+        }
+        */
+        $musique->setPathmusique('$song_name'); // Tranforme en String pour que la requete fonctionne sans le mp3
         $musique->setPathimage($pic_name);
-        $get_mp3->move(
-            "../public/Musiques/",
-            $mp3_name
-        );
-        $get_pic->move(
-            "../public/Images/",
-            $pic_name
-        );
         $musique->setTitre($titre);
         if($artiste != null){
             $musique->setArtiste($artiste);
