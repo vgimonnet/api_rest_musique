@@ -99,8 +99,7 @@ class MusiqueController extends AbstractController
             );
         }else{
             $pic_name = 'fail/jpg';
-        }
-        /* 
+        } 
         if($request->files->get('song') != null) {
             $song = $request->files->get('song');
             $song_name = $titre.'.'.$song->guessExtension();
@@ -111,8 +110,7 @@ class MusiqueController extends AbstractController
         }else{
             $song_name = 'failed.mp3';
         }
-        */
-        $musique->setPathmusique('$song_name'); // Tranforme en String pour que la requete fonctionne sans le mp3
+        $musique->setPathmusique($song_name); // Tranforme en String pour que la requete fonctionne sans le mp3
         $musique->setPathimage($pic_name);
         $musique->setTitre($titre);
         if($artiste != null){
