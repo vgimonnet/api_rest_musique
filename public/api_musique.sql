@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.2
+-- version 4.8.4
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le :  lun. 02 déc. 2019 à 20:26
--- Version du serveur :  10.4.10-MariaDB
--- Version de PHP :  5.6.40
+-- Généré le :  mar. 17 déc. 2019 à 20:11
+-- Version du serveur :  5.7.24
+-- Version de PHP :  7.3.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -69,6 +69,33 @@ INSERT INTO `musique` (`id`, `titre`, `artiste`, `album`, `annee`, `genre`, `pat
 (1, 'Back in Black', 'AC-DC', 'Back in Black', 1980, 'Hard Rock', 'Acdc_-_Back_In_Black-front.jpg', 'AC-DC - Back in Black.mp3'),
 (2, 'Chop Suey!', 'System Of A Down', 'Chop Suey!', 2001, 'Metal', 'chop_suey_album_front.jpg', 'soad_chop_suey.mp3'),
 (3, 'Lose Yourself', 'Eminem', '8Mile', 2002, 'Rap', 'lose_yourself.jpg', 'Eminem-Berzerk.mp3');
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `nom` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `prenom` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `date_creation` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `user`
+--
+
+INSERT INTO `user` (`id`, `username`, `nom`, `prenom`, `password`, `email`, `date_creation`) VALUES
+(1, 'Bob', 'Nom de bob ', 'Uti1', 'bob', NULL, '2019-12-17'),
+(2, 'Alice', 'Nom d\'alice', 'Uti2', 'alice', NULL, '2019-12-17'),
+(3, 'Jean', 'Nom de jean', 'Uti3', 'jean', NULL, '2019-12-18');
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
