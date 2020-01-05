@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
+
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
@@ -18,7 +19,6 @@ class User
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @UniqueEntity("username")
      */
     private $username;
 
@@ -46,6 +46,11 @@ class User
      * @ORM\Column(type="date")
      */
     private $date_creation;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $Admin;
 
     public function getId(): ?int
     {
@@ -120,6 +125,18 @@ class User
     public function setDateCreation(\DateTimeInterface $date_creation): self
     {
         $this->date_creation = $date_creation;
+
+        return $this;
+    }
+
+    public function getAdmin(): ?bool
+    {
+        return $this->Admin;
+    }
+
+    public function setAdmin(bool $Admin): self
+    {
+        $this->Admin = $Admin;
 
         return $this;
     }

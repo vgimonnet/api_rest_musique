@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `migration_versions` (
 --
 
 INSERT INTO `migration_versions` (`version`, `executed_at`) VALUES
-('20191201162513', '2019-12-01 16:43:53');
+('20200105120306', '2020-01-05 12:08:17');
 
 -- --------------------------------------------------------
 
@@ -85,17 +85,18 @@ CREATE TABLE IF NOT EXISTS `user` (
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `date_creation` date NOT NULL,
+  `admin` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `nom`, `prenom`, `password`, `email`, `date_creation`) VALUES
-(1, 'Bob', 'Nom de bob ', 'Uti1', 'bob', NULL, '2019-12-17'),
-(2, 'Alice', 'Nom d\'alice', 'Uti2', 'alice', NULL, '2019-12-17'),
-(3, 'Jean', 'Nom de jean', 'Uti3', 'jean', NULL, '2019-12-18');
+INSERT INTO `user` (`id`, `username`, `nom`, `prenom`, `password`, `email`, `date_creation`, `admin`) VALUES
+(1, 'Bob', 'Nom de bob ', 'Uti1', 'bob', NULL, '2019-12-17', 1),
+(2, 'Alice', 'Nom d\'alice', 'Uti2', 'alice', NULL, '2019-12-17', 0),
+(3, 'Jean', 'Nom de jean', 'Uti3', 'jean', NULL, '2019-12-18', 0);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

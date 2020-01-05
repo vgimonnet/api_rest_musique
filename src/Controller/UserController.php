@@ -28,9 +28,9 @@ class UserController extends AbstractController
     // ajout
 
     /**
-     * @Route("/ajout/{username}/{nom}/{prenom}/{password}/{email}", name="ajout_user", methods={"POST"})
+     * @Route("/ajout/{username}/{nom}/{prenom}/{password}/{email}/{admin}", name="ajout_user", methods={"POST"})
      */
-    public function ajoutUser($username, $nom, $prenom, $password, $email){
+    public function ajoutUser($username, $nom, $prenom, $password, $email, $admin){
 
     	$em = $this->getDoctrine()->getManager();
     	$repository = $this->getDoctrine()->getRepository(User::class);
@@ -51,13 +51,28 @@ class UserController extends AbstractController
     		$user->setPrenom("Pas de prenom");
     	}
 
-    	$password = password_hash($password, PASSWORD_DEFAULT);
-    	$user->setPassword($password);
+    	if ($password != null) {
+    		$password = password_hash($password, PASSWORD_DEFAULT);
+    		$user->setPassword($password);
+    	}else{
+    		$user->setPassword(
+    			// pwd par défault = 123
+    			$password = "123"
+    			$password = password_hash($password, PASSWORD_DEFAULT);
+    			$user->setPassword($password);
+    		)
+    	}
 
     	if($email != null){
     		$user->setEmail($email);
     	}else{
     		$user->setEmail(null);
+    	}
+
+    	if($admin == 1){
+    		$user->setAdmin($admin);
+    	}else{
+    		$user->setAdmin(0);
     	}
 
     	$datetime = date("Y-m-d H:i:s");
@@ -102,7 +117,8 @@ class UserController extends AbstractController
     		'nom' => $user->getNom(),
     		'prenom'    => $user->getPrenom(),
     		'email'    => $user->getEmail(),
-    		'dateCreation'    => $user->getDateCreation()
+    		'dateCreation'    => $user->getDateCreation(),
+    		'admin' 	=> $user->getAdmin()
     	)
     ));
     	$reponse->headers->set("Content-Type", "application/json");
@@ -113,38 +129,52 @@ class UserController extends AbstractController
     // modification
 
     /**
-     * @Route("/update/{id}/{username}/{nom}/{prenom}/{password}/{email}", name="upd_user", methods={"PUT"})
+     * @Route("/update/{id}/{username}/{nom}/{prenom}/{password}/{email}/{admin}", name="upd_user", methods={"PUT"})
      */
-    public function updateUser($id, $username, $nom, $prenom, $password, $email){
+    public function updateUser($id, $username, $nom, $prenom, $password, $email, $admin){
 
     	$em = $this->getDoctrine()->getManager();
     	$repository = $this->getDoctrine()->getRepository(User::class);
     	$user = $repository->find($id);
 
-    	$user->setUsername($username);
+    	if ($username != null) {
+    		$user->setUsername($username);
+    	}else{
+    		$user->setUsername($user->getUsername());
+    	}	    	
 
     	if($nom != null){
     		$user->setNom($nom);
     	}else{
-    		$user->setNom("Nom non update");
+    		$user->setNom($user->getNom());
     	}
 
     	if($prenom != null){
     		$user->setPrenom($prenom);
     	}else{
-    		$user->setPrenom("Prenom non update");
+    		$user->setPrenom($user->getPrenom());
     	}
 
-    	updateMdpUser($password);
-
+    	if ($password != null) {
+    		$password = password_hash($password, PASSWORD_DEFAULT);
+    		$user->setPassword($password);
+    	}else{
+    		$user->setPassword($user->getPassword())
+    	}
+    	
     	if($email != null){
     		$user->setEmail($email);
     	}else{
-    		$user->setEmail(null);
+    		$user->setEmail($user->getEmail());
     	}
 
-    	$datetime = date("Y-m-d H:i:s");
-    	$user->setDateCreation($datetime);
+    	if($admin == 1){
+    		$user->setAdmin($admin);
+    	}else{
+    		$user->setAdmin(0);
+    	}
+
+    	$user->setDateCreation($user->getDateCreation());
 
     	$em->persist($user);
     	$em->flush();
@@ -155,7 +185,8 @@ class UserController extends AbstractController
     		'nom' => $user->getNom(),
     		'prenom'    => $user->getPrenom(),
     		'email'    => $user->getEmail(),
-    		'dateCreation'    => $user->getDateCreation()
+    		'dateCreation'    => $user->getDateCreation(),
+    		'admin' 	=> $user->getAdmin()
     	)
     ));
 
@@ -164,10 +195,43 @@ class UserController extends AbstractController
     	return $reponse;
     }
 
+    // modif password avec route
+
+	/**
+     * @Route("/update/{id}{password}", name="upd_pwd", methods={"PUT"})
+     */
+	public function updateMdpUser($id, $password)
+	{
+		$em = $this->getDoctrine()->getManager();
+		$repository = $this->getDoctrine()->getRepository(User::class);
+		$user = $repository->find($id);
+
+		$password = password_hash($password, PASSWORD_DEFAULT);
+		$user->setPassword($password);
+
+		$em->persist($user);
+		$em->flush();
+
+		$reponse = new Response(json_encode(array(
+			'id'     => $user->getId(),
+			'username'    => $user->getUsername(),
+			'nom' => $user->getNom(),
+			'prenom'    => $user->getPrenom(),
+			'email'    => $user->getEmail(),
+			'dateCreation'    => $user->getDateCreation(),
+			'admin' 	=> $user->getAdmin()
+		)
+	));
+
+		$reponse->headers->set("Content-Type", "application/json");
+		$reponse->headers->set("Access-Control-Allow-Origin", "*");
+		return $reponse;
+	}
+
     // connexion
 
     /**
-     * @Route("/connexion/{id}/{username}/{password}", name="connexion_user", methods={"GET"})
+     * @Route("/connexion/{username}/{password}", name="connexion_user", methods={"GET"})
      */
     public function connexion($username, $password)
     {
@@ -214,7 +278,8 @@ class UserController extends AbstractController
     			'nom' => $user->getNom(),
     			'prenom' => $user->getPrenom(),
     			'email' => $user->getEmail(),
-    			'date_creation' => $user->getDateCreation()
+    			'date_creation' => $user->getDateCreation(),
+    			'admin'=> $user->getAdmin()
     		);
     	}        
 
@@ -242,31 +307,15 @@ class UserController extends AbstractController
     			'nom' => $user->getNom(),
     			'prenom' => $user->getPrenom(),
     			'email' => $user->getEmail(),
-    			'date_creation' => $user->getDateCreation()
+    			'date_creation' => $user->getDateCreation(),
+    			'admin'=> $user->getAdmin()
     		); 
     	}
 
     	$reponse = new Response();
-    	$reponse->setContent(json_encode($listMusiques));
+    	$reponse->setContent(json_encode($listUser));
     	$reponse->headers->set("Content-Type", "application/json");
     	$reponse->headers->set("Access-Control-Allow-Origin", "*");
     	return $reponse;
     }
-
-
-    // modif password
-
-    public function updateMdpUser($id)
-    {
-    	# code...
-    }
-
-
-
-
-
-
-
-
-    // il manque updateMdpUser et mauvais code dans updateUser pour updateMdpUser ligne 138
 }
