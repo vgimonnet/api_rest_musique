@@ -28,17 +28,17 @@ class UserController extends AbstractController
     // ajout
 
     /**
-     * @Route("/ajout/{username}/{nom}/{prenom}/{password}/{email}/{admin}", name="ajout_user", methods={"POST"})
+     * @Route("/ajout/{username}/{nom}/{prenom}/{password}/{email}", name="ajout_user", methods={"POST"})
      */
-    public function ajoutUser($username, $nom, $prenom, $password, $email, $admin){
+    public function ajoutUser($username, $nom, $prenom, $password, $email){
 
     	$em = $this->getDoctrine()->getManager();
     	$repository = $this->getDoctrine()->getRepository(User::class);
     	$user = new User();
 
         // récupération des données
-    	$user->setUsername($username);
-
+			$user->setUsername($username);
+			
     	if($nom != null){
     		$user->setNom($nom);
     	}else{
@@ -55,29 +55,20 @@ class UserController extends AbstractController
     		$password = password_hash($password, PASSWORD_DEFAULT);
     		$user->setPassword($password);
     	}else{
-    		$user->setPassword(
-    			// pwd par défault = 123
-    			$password = "123"
-    			$password = password_hash($password, PASSWORD_DEFAULT);
-    			$user->setPassword($password);
-    		)
+				// pwd par défault = 123
+				$password = "123";
+				$password = password_hash($password, PASSWORD_DEFAULT);
+				$user->setPassword($password);
     	}
 
     	if($email != null){
     		$user->setEmail($email);
     	}else{
     		$user->setEmail(null);
-    	}
-
-    	if($admin == 1){
-    		$user->setAdmin($admin);
-    	}else{
-    		$user->setAdmin(0);
-    	}
-
-    	$datetime = date("Y-m-d H:i:s");
-    	$user->setDateCreation($datetime);
-
+			}
+			
+    	$user->setAdmin(0);
+			
         // on enregistre
     	$em->persist($user);
     	$em->flush();
@@ -88,8 +79,7 @@ class UserController extends AbstractController
     		'username'    => $user->getUsername(),
     		'nom' => $user->getNom(),
     		'prenom'    => $user->getPrenom(),
-    		'email'    => $user->getEmail(),
-    		'dateCreation'    => $user->getDateCreation()
+    		'email'    => $user->getEmail()
     	)
     ));
     	$reponse->headers->set("Content-Type", "application/json");
@@ -114,11 +104,6 @@ class UserController extends AbstractController
     	$reponse = new Response(json_encode(array(
     		'id'     => $user->getId(),
     		'username'    => $user->getUsername(),
-    		'nom' => $user->getNom(),
-    		'prenom'    => $user->getPrenom(),
-    		'email'    => $user->getEmail(),
-    		'dateCreation'    => $user->getDateCreation(),
-    		'admin' 	=> $user->getAdmin()
     	)
     ));
     	$reponse->headers->set("Content-Type", "application/json");
@@ -129,9 +114,9 @@ class UserController extends AbstractController
     // modification
 
     /**
-     * @Route("/update/{id}/{username}/{nom}/{prenom}/{password}/{email}/{admin}", name="upd_user", methods={"PUT"})
+     * @Route("/update/{id}/{username}/{nom}/{prenom}/{password}/{email}", name="upd_user", methods={"PUT"})
      */
-    public function updateUser($id, $username, $nom, $prenom, $password, $email, $admin){
+    public function updateUser($id, $username, $nom, $prenom, $password, $email){
 
     	$em = $this->getDoctrine()->getManager();
     	$repository = $this->getDoctrine()->getRepository(User::class);
@@ -159,7 +144,7 @@ class UserController extends AbstractController
     		$password = password_hash($password, PASSWORD_DEFAULT);
     		$user->setPassword($password);
     	}else{
-    		$user->setPassword($user->getPassword())
+    		$user->setPassword($user->getPassword());
     	}
     	
     	if($email != null){
@@ -167,14 +152,6 @@ class UserController extends AbstractController
     	}else{
     		$user->setEmail($user->getEmail());
     	}
-
-    	if($admin == 1){
-    		$user->setAdmin($admin);
-    	}else{
-    		$user->setAdmin(0);
-    	}
-
-    	$user->setDateCreation($user->getDateCreation());
 
     	$em->persist($user);
     	$em->flush();
@@ -185,8 +162,6 @@ class UserController extends AbstractController
     		'nom' => $user->getNom(),
     		'prenom'    => $user->getPrenom(),
     		'email'    => $user->getEmail(),
-    		'dateCreation'    => $user->getDateCreation(),
-    		'admin' 	=> $user->getAdmin()
     	)
     ));
 
@@ -218,7 +193,6 @@ class UserController extends AbstractController
 			'nom' => $user->getNom(),
 			'prenom'    => $user->getPrenom(),
 			'email'    => $user->getEmail(),
-			'dateCreation'    => $user->getDateCreation(),
 			'admin' 	=> $user->getAdmin()
 		)
 	));
@@ -236,7 +210,7 @@ class UserController extends AbstractController
     public function connexion($username, $password)
     {
     	$repository = $this->getDoctrine()->getRepository(User::class);
-    	$user = $repository->find($username);
+    	$user = $repository->findOneBy(['username' => $username]);
 
     	$pass = $user->getPassword();
 
@@ -249,14 +223,24 @@ class UserController extends AbstractController
     		$verif = false;
     	}
 
-    	if( !empty($user)){
-    		$detailUser = array(
+				if( !empty($user)){ 
+					$username = $user->getUsername();
+				}else{ 
+					$username = 'anonymous'; 
+				}
+    		$reponse = new Response(json_encode(array(
     			'id' => $user->getId(),
-    			'username' => $user->getUsername(),
-    			'verif' => $verif
-    		);
-    	} 
+					'username' => $username,
+					'prenom' => $user->getPrenom(),
+					'nom' => $user->getNom(),
+					'email' => $user->getEmail(),
+					'verif' => $verif,
+					'admin' => $user->getAdmin()
+					))
+        ); 
+			
 
+			
     	$reponse->headers->set("Content-Type", "application/json");
     	$reponse->headers->set("Access-Control-Allow-Origin", "*");
     	return $reponse;
@@ -278,7 +262,6 @@ class UserController extends AbstractController
     			'nom' => $user->getNom(),
     			'prenom' => $user->getPrenom(),
     			'email' => $user->getEmail(),
-    			'date_creation' => $user->getDateCreation(),
     			'admin'=> $user->getAdmin()
     		);
     	}        
@@ -293,7 +276,7 @@ class UserController extends AbstractController
     // get tout les users
 
     /**
-     * @Route("/user", name="user", methods={"GET"})
+     * @Route("/users", name="user", methods={"GET"})
      */
     public function getAllUsers(){
     	$repository = $this->getDoctrine()->getRepository(User::class);
@@ -307,7 +290,6 @@ class UserController extends AbstractController
     			'nom' => $user->getNom(),
     			'prenom' => $user->getPrenom(),
     			'email' => $user->getEmail(),
-    			'date_creation' => $user->getDateCreation(),
     			'admin'=> $user->getAdmin()
     		); 
     	}

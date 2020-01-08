@@ -43,11 +43,6 @@ class User
     private $email;
 
     /**
-     * @ORM\Column(type="date")
-     */
-    private $date_creation;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $Admin;
@@ -110,31 +105,19 @@ class User
         return $this->email;
     }
 
-    public function setEmail(?string $email): self
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
         return $this;
     }
 
-    public function getDateCreation(): ?\DateTimeInterface
-    {
-        return $this->date_creation;
-    }
-
-    public function setDateCreation(\DateTimeInterface $date_creation): self
-    {
-        $this->date_creation = $date_creation;
-
-        return $this;
-    }
-
-    public function getAdmin(): ?bool
+    public function getAdmin(): ?int
     {
         return $this->Admin;
     }
 
-    public function setAdmin(bool $Admin): self
+    public function setAdmin(int $Admin): self
     {
         $this->Admin = $Admin;
 
