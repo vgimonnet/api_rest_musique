@@ -84,7 +84,6 @@ CREATE TABLE IF NOT EXISTS `user` (
   `prenom` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `date_creation` date NOT NULL,
   `admin` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -93,10 +92,10 @@ CREATE TABLE IF NOT EXISTS `user` (
 -- Déchargement des données de la table `user`
 --
 
-INSERT INTO `user` (`id`, `username`, `nom`, `prenom`, `password`, `email`, `date_creation`, `admin`) VALUES
-(1, 'Bob', 'Nom de bob ', 'Uti1', 'bob', NULL, '2019-12-17', 1),
-(2, 'Alice', 'Nom d\'alice', 'Uti2', 'alice', NULL, '2019-12-17', 0),
-(3, 'Jean', 'Nom de jean', 'Uti3', 'jean', NULL, '2019-12-18', 0);
+INSERT INTO `user` (`id`, `username`, `nom`, `prenom`, `password`, `email`, `admin`) VALUES
+(1, 'Bob', 'Nom de bob ', 'Uti1', 'bob', NULL, 1),
+(2, 'Alice', 'Nom d\'alice', 'Uti2', 'alice', NULL, 0),
+(3, 'Jean', 'Nom de jean', 'Uti3', 'jean', NULL, 0);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
