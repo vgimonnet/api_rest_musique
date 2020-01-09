@@ -62,6 +62,7 @@ class UserController extends AbstractController
     	}
 
     	if($email != null){
+				$email = str_replace('-', '.', $email);
     		$user->setEmail($email);
     	}else{
     		$user->setEmail(null);
