@@ -93,9 +93,9 @@ CREATE TABLE IF NOT EXISTS `user` (
 --
 
 INSERT INTO `user` (`id`, `username`, `nom`, `prenom`, `password`, `email`, `admin`) VALUES
-(1, 'Bob', 'Nom de bob ', 'Uti1', 'bob', NULL, 1),
-(2, 'Alice', 'Nom d\'alice', 'Uti2', 'alice', NULL, 0),
-(3, 'Jean', 'Nom de jean', 'Uti3', 'jean', NULL, 0);
+(1, 'Bob', 'Nom de bob ', 'Uti1', '$2y$10$pEUbTxt5U.pHtNGN7ztjtOL/i1tJXfeTZF7XHvlcLGbYhTgge08BW', 'NULL', 1),
+(2, 'Alice', 'Nom d\'alice', 'Uti2', '$2y$10$pEUbTxt5U.pHtNGN7ztjtOL/i1tJXfeTZF7XHvlcLGbYhTgge08BW', NULL, 0),
+(3, 'Jean', 'Nom de jean', 'Uti3', '$2y$10$pEUbTxt5U.pHtNGN7ztjtOL/i1tJXfeTZF7XHvlcLGbYhTgge08BW', NULL, 0);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
