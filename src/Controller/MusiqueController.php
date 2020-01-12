@@ -157,6 +157,8 @@ class MusiqueController extends AbstractController
         $em = $this->getDoctrine()->getManager();
         $repository = $this->getDoctrine()->getRepository(Musique::class);
         $musique = $repository->find($id);
+        unlink('../public/Images/'.$musique->getPathimage());
+        unlink('../public/Musiques/'.$musique->getPathmusique());
         $em->remove($musique);
         $em->flush();
 
