@@ -14,3 +14,10 @@ php bin/console doctrine:database:create
 ```
 php bin/console doctrine:migrations:migrate
 ```
+
+### Démarrer le serveur
+```
+php -S localhost:8000 -t public -d upload_max_filesize=128M
+```
+
+[Lien vers la vue](https://github.com/c-noblet/musik)
