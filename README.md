@@ -5,6 +5,12 @@
 composer install
 ```
 
+### Configurer connexion bdd
+```
+Modifier la ligne DATABASE_URL du fichier .env et ajouter vos propres paramétres de connexion
+```
+
+
 ### Pour créer la bdd
 ```
 php bin/console doctrine:database:create
